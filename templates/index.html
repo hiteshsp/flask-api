@@ -5,10 +5,11 @@
 {% block section %}
 
 <div class="txt_shorten col-lg-5">
-	<form>
+	<form method="POST" action="/">
 		<div class="input-group">
-			{{form.long_url(class="form-control",placeholder="Enter your URL")}}
-			{{form.submit(class="input-group-append form-field btn btn-primary")}}
+			{{ form.csrf_token }}
+			{{ form.long_url(class="form-control",placeholder="Enter your URL") }}
+			{{ form.submit(class="input-group-append form-field btn btn-primary") }}
 		</div>
 	</form>
 </div>

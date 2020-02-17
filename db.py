@@ -1,43 +1,50 @@
 import boto3
+import os
 from time import time
-client = boto3.client('dynamodb')
 
-class DynamoDB():
-    
-    def dedup(obj):
+client = boto3.client('dynamodb')
+table_name = os.environ.get('TABLE_NAME')
+
+class DynamoDB: 
+
+    def __init__(self, obj):
+        self.obj = obj
+
+    def search(self):
         '''
-        Returns the short url without generating it afresh.
+           Searches for duplicates 
+           If found returns <'True', response object>
+           else return 'False'
         '''
         response = client.query(
-            TableName=obj.table_name,
+            TableName=table_name,
             ExpressionAttributeValues= {':url':{
-                    'S':obj.long_url,
+                    'S':self.obj['long_url'],
                     },
             },
             KeyConditionExpression='long_url = :url',
             ProjectionExpression='short_url'
             )
-        return response['Items'][0]['short_url']['S']
-    
+        
+        if response['Count'] == 0:
+            return False, "empty"
 
+        return True, response
 
-# class Dynamodb(model):
-    
-#  def insert():
-#     '''
-#     This method inserts items into the table
-#     '''
-#     time = int(time.time())
-#     item = client.put_item( TableName=model.name,
-#         Item={
-#             'long_url':{
-#                'S': model.long_url
-#             },
-#             'timestamp':{
-#                'N': time
-#                 },
-#             'short_url':{
-#                 'S': model.short_url
-#                 }
-#             }
-#         }
+    def insert(self):
+
+        '''
+        This method inserts items into the table
+        '''
+        item = client.put_item( TableName=table_name,
+            Item={
+                'long_url':{
+                'S': self.obj['long_url']
+                },
+                'timestamp':{
+                'S': self.obj['timestamp']
+                    },
+                'short_url':{
+                    'S': self.obj['short_url']
+                    },
+                })
