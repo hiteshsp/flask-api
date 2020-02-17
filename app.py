@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, request
 from forms import UrlForm
-
-
+from db import DynamoDB
 
 # '__name__' to refer the current file
 app = Flask(__name__)
@@ -10,27 +9,7 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py',)
 
 app.config.get("DYNAMODB_TABLE")
-
-# class Dynamodb(model):
-    
-#  def insert():
-#     '''
-#     This method inserts items into the table
-#     '''
-#     time = int(time.time())
-#     item = client.put_item( TableName=model.name,
-#         Item={
-#             'long_url':{
-#                'S': model.long_url
-#             },
-#             'timestamp':{
-#                'N': time
-#                 },
-#             'short_url':{
-#                 'S': model.short_url
-#                 }
-#             }
-#         }
+app.config.get("SECRET_KEY")
 
 @app.route('/', methods=['POST','GET'])
 def index():
@@ -41,15 +20,7 @@ def index():
     if new_form.validate_on_submit():
        return redirect(url_for('success'))
     return render_template('index.html', form=new_form)
-        
-    #     try:
-    #         db = Dynamodb(model)
-    #         db.insert()
-    #     except:
-    #         return "YOLO! Dynamodb doesn't Work!"        
-    # else:
-    # return render_template('index.html')
-
+   
 @app.route("/stats")
 def stats():
     '''
