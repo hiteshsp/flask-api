@@ -18,6 +18,7 @@ class DynamoDB():
             ProjectionExpression='short_url'
             )
         return response['Items'][0]['short_url']['S']
+    
 
 
 # class Dynamodb(model):
