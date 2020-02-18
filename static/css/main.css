@@ -43,3 +43,13 @@ thead{
    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
    font-weight: normal;
 }
+.errors{
+   margin: 10% 10% 10% 10%;
+   padding: 1px 1px 1px 1px;
+}
+
+.short_url{
+   position: fixed;
+   left:40%;
+   text-align: center;
+}

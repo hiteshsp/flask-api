@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, request
 from forms import UrlForm
 from db import DynamoDB
 from time import time
@@ -35,12 +35,14 @@ def index():
         db_obj = DynamoDB(obj)
         flag, response = db_obj.search()
         if flag == True:
-            response = response['Items'][0]['short_url']['S'] # debug point
-            return response            
+            response = response['Items'][0]['short_url']['S'] 
+            print(response) # debug point
+            return render_template('index.html', form=new_form, short_url=response)            
         else:
-            db_obj.insert()
+            db_obj.insert()            
             print("insert successful") # debug point
-            return redirect(url_for('index'))
+            return render_template('index.html', form=new_form, short_url=obj['short_url'])
+        
     return render_template('index.html', form=new_form)
 
 @app.route("/stats")
